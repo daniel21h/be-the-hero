@@ -5,8 +5,14 @@ module.exports = {
     //Realizando listagem de ID's
     async index(request, response) {
 
+        //Trabalhando na paginaçao dos casos
+
+
         //Conectando com a tabela incidents
-        const incidents = await connection('incidents').select('*')
+        const incidents = await connection('incidents')
+            .limit(5) //limitando o retorno em apenas 5 incidentes
+            .offset((page - 1) * 5) //Pulando 5 registros por p'agina
+            .select('*')
 
         return response.json(incidents)
     },    
@@ -14,7 +20,7 @@ module.exports = {
     //Criando um incidente
     async create(request, response) {
 
-        //Desestruturando os dados necessarios para cadastro
+        //Desestruturando os dados necessarios para cadastro.
         const { title, description, value } = request.body
 
         // O header(onde vai a autenticaçao) guarda o contexto da requisicao, 
