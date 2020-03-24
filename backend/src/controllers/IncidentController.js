@@ -4,8 +4,15 @@ module.exports = {
 
     //Realizando listagem de ID's
     async index(request, response) {
-
+        
         //Trabalhando na paginaçao dos casos
+        const { page = 1 } = request.query
+
+        //Retornando a quantidades de casos
+        const [count] = await connection('incidents')
+            .count()
+
+            console.log(count)
 
 
         //Conectando com a tabela incidents
@@ -13,7 +20,10 @@ module.exports = {
             .limit(5) //limitando o retorno em apenas 5 incidentes
             .offset((page - 1) * 5) //Pulando 5 registros por p'agina
             .select('*')
-
+        
+        //Retornando o total de itens pelo cabeçalho da resposta
+        response.header('X-Total-Count', count['count(*)'])
+    
         return response.json(incidents)
     },    
 
