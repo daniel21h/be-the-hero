@@ -17,9 +17,21 @@ module.exports = {
 
         //Conectando com a tabela incidents
         const incidents = await connection('incidents')
+
+            //Trazendo os dados da ONG relacionado ao incidente
+            .join('ongs', 'ongs.id', '=', 'incidents.ong_id')
             .limit(5) //limitando o retorno em apenas 5 incidentes
             .offset((page - 1) * 5) //Pulando 5 registros por p'agina
-            .select('*')
+
+            //Buscando campos da tabela do DB
+            .select([
+                'incidents.*', 
+                'ongs.name', 
+                'ongs.email', 
+                'ongs.whatsapp', 
+                'ongs.city', 
+                'ongs.uf'
+            ])
         
         //Retornando o total de itens pelo cabeçalho da resposta
         response.header('X-Total-Count', count['count(*)'])
