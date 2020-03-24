@@ -9,7 +9,7 @@ module.exports = {
     }
   },
 
-  // Para simular a aplicaçao de desenv. com teste online
+  // Para simular a aplicaçao de desenv. com teste online.
   staging: {
     client: 'postgresql',
     connection: {
