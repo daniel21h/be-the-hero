@@ -2,6 +2,15 @@ const connection = require('../database/connection')
 
 module.exports = {
 
+    //Realizando listagem de ID's
+    async index(request, response) {
+
+        //Conectando com a tabela incidents
+        const incidents = await connection('incidents').select('*')
+
+        return response.json(incidents)
+    },    
+
     //Criando um incidente
     async create(request, response) {
 
