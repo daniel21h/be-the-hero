@@ -30,7 +30,31 @@ module.exports = {
         })
 
         return response.json({ id })
-    }
+    },
 
-        
+    async delete(request, response) {
+
+        //Pegando o id que vem dentro da requisiçao
+        const { id } = request.params
+
+        //Pegando id da ong logada para verificar se o incidente realmente 
+        // foi criado pela mesma, para nao ocorrer dela deletar o incidente de outra ong
+        const ong_id = request.headers.authorization
+
+        const incident = await connection('incidents')
+            .where('id', id)
+            .select('ong_id')
+            .first()
+
+        if (incident.ong_id !== ong_id) {
+            return response.status(401).json({ error: 'Operation not permitted.' })
+            //401 = Nao autorizado
+        }
+
+        //Dando tudo certo/se passou eu vou deletar do DB
+        await connection('incidents').where('id', id).delete()
+
+        //Resposta de que deu certo, mas sem conteudo para retornar
+        return response.status(204).send()
+    }
 }
